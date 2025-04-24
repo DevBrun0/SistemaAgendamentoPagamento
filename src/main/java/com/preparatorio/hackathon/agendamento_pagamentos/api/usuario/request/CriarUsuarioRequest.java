@@ -8,6 +8,6 @@ public record CriarUsuarioRequest(
         @NotBlank(message = "Nome não pode ser vazio") String nome,
         @CPF(message = "Documento deve ser um CPF válido") String documento,
         String email,
-        @NotNull(message =  "Senha não pode ser nula") String senha
+        @NotBlank(message =  "Senha não pode ser nula") String senha
 ) {
 }
