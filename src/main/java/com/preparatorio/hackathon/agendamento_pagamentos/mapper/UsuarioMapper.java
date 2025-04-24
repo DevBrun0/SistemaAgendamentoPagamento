@@ -3,7 +3,9 @@ package com.preparatorio.hackathon.agendamento_pagamentos.mapper;
 import com.preparatorio.hackathon.agendamento_pagamentos.api.usuario.request.CriarUsuarioRequest;
 import com.preparatorio.hackathon.agendamento_pagamentos.api.usuario.response.UsuarioResponse;
 import com.preparatorio.hackathon.agendamento_pagamentos.domain.Usuario;
+import org.springframework.stereotype.Component;
 
+@Component
 public class UsuarioMapper {
     public Usuario criarUsuarioRequestToUsuario(CriarUsuarioRequest criarUsuarioRequest) {
         return new Usuario(
