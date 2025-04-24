@@ -27,7 +27,7 @@ public class BoletoAPI {
     private BoletoService boletoService;
 
     @PostMapping
-    public ResponseEntity<?> criarBoleto(@RequestBody @Valid BoletoRequest boletoRequest) {
+    public ResponseEntity<?> criarBoleto(@Valid @RequestBody BoletoRequest boletoRequest) {
         Boleto boleto = boletoService.criarBoleto(boletoRequest);
         if (boleto !=null) {
             return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -67,8 +67,8 @@ public class BoletoAPI {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deletarBoleto(@PathVariable @Valid String id) {
-        boletoService.deletarBoleto(id);
-        if(buscarBoletosPorId(id) == null){
+        if(buscarBoletosPorId(id) != null){
+            boletoService.deletarBoleto(id);
             return ResponseEntity.status(HttpStatus.OK).build();
         } else return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
