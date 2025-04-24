@@ -2,6 +2,7 @@ package com.preparatorio.hackathon.agendamento_pagamentos.api.usuario;
 
 import com.preparatorio.hackathon.agendamento_pagamentos.api.usuario.request.CriarUsuarioRequest;
 import com.preparatorio.hackathon.agendamento_pagamentos.api.usuario.response.UsuarioResponse;
+import com.preparatorio.hackathon.agendamento_pagamentos.domain.Usuario;
 import com.preparatorio.hackathon.agendamento_pagamentos.service.UsuarioService;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -18,10 +19,10 @@ public class UsuarioAPI {
     private UsuarioService service;
 
     @PostMapping
-    public ResponseEntity<String> postUsuario(@Valid @RequestBody CriarUsuarioRequest criarUsuarioRequest) {
-        service.criarUsuario(criarUsuarioRequest);
+    public ResponseEntity<UsuarioResponse> postUsuario(@Valid @RequestBody CriarUsuarioRequest criarUsuarioRequest) {
+        UsuarioResponse usuario = service.criarUsuario(criarUsuarioRequest);
         return ResponseEntity.status(HttpStatus.CREATED)
-                    .body("Usuário criado com sucesso!");
+                    .body(usuario);
     }
 
     @GetMapping

@@ -24,15 +24,18 @@ public class UsuarioService {
     @Autowired
     private UsuarioMapper mapper;
 
-    public Usuario criarUsuario(CriarUsuarioRequest criarUsuarioRequest) {
+    public UsuarioResponse criarUsuario(CriarUsuarioRequest criarUsuarioRequest) {
         Usuario usuario = mapper.criarUsuarioRequestToUsuario(criarUsuarioRequest);
+
+        Usuario usuarioExistente = usuarioRepository.findByDocumento(usuario.getDocumento()).orElse(null);
+        if (usuarioExistente != null) throw new CriarUsuarioException("Já existe um usuário cadastrado com este CPF!");
 
         var senhaHasheada = hashearSenha(usuario.getSenha());
         usuario.setSenha(senhaHasheada);
 
         Usuario usuarioCriado =  usuarioRepository.save(usuario);
-        if (usuarioCriado.getId() == null) throw new CriarUsuarioException("Ocorreu algum erro na criação do usuario!");
-        return usuarioCriado;
+        if (usuarioCriado.getId() == null) throw new CriarUsuarioException("Ocorreu algum erro na criação do usuário!");
+        return mapper.usuarioToUsuarioResponse(usuario);
     }
 
     public List<UsuarioResponse> buscarTodosUsuarios() {
