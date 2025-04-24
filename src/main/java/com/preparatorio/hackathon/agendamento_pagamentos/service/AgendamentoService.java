@@ -25,7 +25,7 @@ public class AgendamentoService {
 
     public Agendamento criarAgendamento(CriarAgendamentoRequest criarAgendamentoRequest) {
         Agendamento agendamentoSalvo = agendamentoMapper.criarAgendamento(criarAgendamentoRequest);
-        boletoService.atualizarStatusBoleto(agendamentoSalvo.getBoleto().getId(), StatusBoleto.AGENDADO);
+        boletoService.atualizarStatusBoleto(agendamentoSalvo.getBoleto().getId(), agendamentoSalvo.getBoleto(), StatusBoleto.AGENDADO);
         return salvarAgendamento(agendamentoSalvo);
     }
 

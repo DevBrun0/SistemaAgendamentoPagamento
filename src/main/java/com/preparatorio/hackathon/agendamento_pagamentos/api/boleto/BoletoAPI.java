@@ -3,6 +3,7 @@ package com.preparatorio.hackathon.agendamento_pagamentos.api.boleto;
 import com.preparatorio.hackathon.agendamento_pagamentos.api.boleto.request.BoletoRequest;
 import com.preparatorio.hackathon.agendamento_pagamentos.domain.Boleto;
 import com.preparatorio.hackathon.agendamento_pagamentos.domain.enums.StatusBoleto;
+import com.preparatorio.hackathon.agendamento_pagamentos.exceptions.BoletoNaoEncontradoException;
 import com.preparatorio.hackathon.agendamento_pagamentos.service.BoletoService;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -59,11 +60,9 @@ public class BoletoAPI {
     
     @PutMapping("/{id}")
     public ResponseEntity<?> atualizarBoleto(@PathVariable @Valid String id, @RequestBody StatusBoleto statusBoleto) {
-        Optional<Boleto> boleto = boletoService.buscarBoletoPorId(id);
-        if (boleto.isPresent()){
-            Boleto boletoAtualizado = boletoService.atualizarStatusBoleto(id, statusBoleto);
-            return ResponseEntity.status(HttpStatus.OK).body(boletoAtualizado);
-        } else return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        Boleto boleto = boletoService.buscarBoletoPorId(id).orElseThrow(() -> new BoletoNaoEncontradoException("Boleto não encontrado!"));
+        Boleto boletoAtualizado = boletoService.atualizarStatusBoleto(id, boleto, statusBoleto);
+        return ResponseEntity.status(HttpStatus.OK).body(boletoAtualizado);
     }
 
     @DeleteMapping("/{id}")

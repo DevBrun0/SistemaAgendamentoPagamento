@@ -3,6 +3,7 @@ package com.preparatorio.hackathon.agendamento_pagamentos.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -35,6 +36,18 @@ public class GlobalHandlerExceptions extends RuntimeException {
 
     @ExceptionHandler(AlteracaoUsuarioException.class)
     public ResponseEntity<ErroResponse> alteracaoUsuarioException(AlteracaoUsuarioException ex) {
+        ErroResponse erro = new ErroResponse(ex.getMessage(), HttpStatus.BAD_REQUEST.value());
+        return new ResponseEntity<>(erro, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErroResponse> methodArgumentNotValidException(MethodArgumentNotValidException ex) {
+        ErroResponse erro = new ErroResponse(ex.getMessage(), HttpStatus.BAD_REQUEST.value());
+        return new ResponseEntity<>(erro, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(NullPointerException.class)
+    public ResponseEntity<ErroResponse> nullPointerException(NullPointerException ex) {
         ErroResponse erro = new ErroResponse(ex.getMessage(), HttpStatus.BAD_REQUEST.value());
         return new ResponseEntity<>(erro, HttpStatus.BAD_REQUEST);
     }

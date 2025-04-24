@@ -41,13 +41,9 @@ public class BoletoService {
         return boletoRepository.findById(id);
     }
 
-    public Boleto atualizarStatusBoleto(String id, StatusBoleto statusBoleto) {
-        Optional<Boleto> boletoAtualizado = boletoRepository.findById(id);
-        if (boletoAtualizado.isPresent()) {
-            boletoAtualizado.get().setStatus(statusBoleto);
-            return boletoRepository.save(boletoAtualizado.get());
-        }
-        return null;
+    public Boleto atualizarStatusBoleto(String id, Boleto boleto, StatusBoleto statusBoleto) {
+            boleto.setStatus(statusBoleto);
+            return boletoRepository.save(boleto);
     }
 
     public void deletarBoleto(String id) {
