@@ -10,6 +10,8 @@ import com.preparatorio.hackathon.agendamento_pagamentos.api.usuario.response.Us
 import com.preparatorio.hackathon.agendamento_pagamentos.domain.Usuario;
 import com.preparatorio.hackathon.agendamento_pagamentos.repository.UsuarioRepository;
 import java.util.List;
+
+import com.preparatorio.hackathon.agendamento_pagamentos.util.EncriptacaoSenha;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,12 +24,15 @@ public class UsuarioService {
     @Autowired
     private UsuarioMapper mapper;
 
-    public void criarUsuario(CriarUsuarioRequest criarUsuarioRequest) {
+    public Usuario criarUsuario(CriarUsuarioRequest criarUsuarioRequest) {
         Usuario usuario = mapper.criarUsuarioRequestToUsuario(criarUsuarioRequest);
 
-        Usuario usuarioCriado =  usuarioRepository.save(usuario);
+        var senhaHasheada = hashearSenha(usuario.getSenha());
+        usuario.setSenha(senhaHasheada);
 
+        Usuario usuarioCriado =  usuarioRepository.save(usuario);
         if (usuarioCriado.getId() == null) throw new CriarUsuarioException("Ocorreu algum erro na criação do usuario!");
+        return usuarioCriado;
     }
 
     public List<UsuarioResponse> buscarTodosUsuarios() {
@@ -47,4 +52,14 @@ public class UsuarioService {
     public void alterarUsuario(String id, CriarUsuarioRequest alteracoes) {
         if (!usuarioRepository.alterarUsuario(id, alteracoes)) throw new AlteracaoUsuarioException("Não foi possível atualizar o usuário " + alteracoes.nome());
     }
+
+    public String hashearSenha(String senha) {
+        String senhaHasheada = EncriptacaoSenha.hashearSenha(senha);
+        return senhaHasheada;
+    }
+
+    public boolean validarSenha(String senha, String senhaHasheada) {
+        return EncriptacaoSenha.verificarSenha(senha, senhaHasheada);
+    }
+
 }
